@@ -3,6 +3,10 @@
 Azure OpenAI RAG(Retrieval Augmented Generation) 인덱싱을 위한 쉘 스크립트입니다.
 Azure Cognitive Search를 이용하여 RAG 인덱싱을 수행하며 Semantic Search와 Vector Search를 동시에 지원하는 인덱스를 생성합니다.
 
+## 사용시나리오
+
+
+
 ## Quick Start
 
 1. 환경 변수 설정
@@ -18,7 +22,7 @@ Azure Cognitive Search를 이용하여 RAG 인덱싱을 수행하며 Semantic Se
     export AZURE_SEARCH_SERVICE=<Azure Search Service Name>
     export AZURE_TENANT_ID=<Azure Tenant ID>
 
-       ```
+    ```
 
 2. 패키지 설치
 
@@ -54,7 +58,7 @@ Azure Form Recognizer를 사용하여 이미지화된 PDF문서 인식을 강화
     export AZURE_STORAGE_ACCOUNT_KEY=<Azure Storage Account Key>
     ```
     
-* `prepdocs.sh`에서 Form Recognizer와 Storage Account를 사용하도록 파라미터를 조정합니다.
+* `prepdocs.sh`에서 Form Recognizer와 Storage Account를 사용하도록 파라미터를 조정합니다. (`predocs-advanced.sh`)
 
     ```bash
     python3 ./prepdocs.py './data/*' \
@@ -74,6 +78,12 @@ Azure Form Recognizer를 사용하여 이미지화된 PDF문서 인식을 강화
     ```
 
 ## 노트북을 이용하여 인덱싱 된 결과 확인
+
+* `env.sample`파일에 있는 환경 변수를 설정하고 파일 이름을 `.env`로 변경합니다.
+
+    ```bash
+    cp env.sample .env
+    ```
 
 * `search-vector.ipynb`있는 노트북을 사용하여 인덱싱 된 결과를 확인할 수 있습니다.
 
@@ -101,7 +111,6 @@ Azure Form Recognizer를 사용하여 이미지화된 PDF문서 인식을 강화
     r = search_client.search(search, top=3, vector=Vector(value=query_vector, k=50, fields="embedding") if query_vector else None)
     
     ```
-
 
 ## 참고
 
