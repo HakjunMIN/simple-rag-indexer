@@ -5,7 +5,9 @@ Azure Cognitive Search를 이용하여 RAG 인덱싱을 수행하며 Semantic Se
 
 ## 사용시나리오
 
+![secnario](./image/seqdiagram.png)
 
+> 인덱싱 요청 및 생성은 Azure DevOps Pipeline이나 GitHub Action을 이용하여 자동화할 수 있습니다
 
 ## Quick Start
 
