@@ -49,5 +49,8 @@ jobs:
           pip install azure-search-documents==11.4.0a20230509004 --index-url=https://pkgs.dev.azure.com/azure-sdk/public/_packaging/azure-sdk-for-python/pypi/simple/
           ./prepdocs.sh    
 
-      - name: Send greeting
-        run: echo "Hello ${{ inputs.AZURE_SEARCH_INDEX }}"
+      - name: Providing relavant information
+        run: |
+          echo "AZURE_SEARCH_INDEX: ${{ inputs.AZURE_SEARCH_INDEX }}"
+          echo "AZURE_SEARCH_QUERY_KEY: ${{ secrets.AZURE_SEARCH_QUERY_KEY }}"
+          echo "Use search-vector.ipynb to query the index with GPT models"
