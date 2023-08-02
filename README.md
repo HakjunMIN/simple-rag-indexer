@@ -44,6 +44,91 @@ Azure Cognitive Search를 이용하여 RAG 인덱싱을 수행하며 Semantic Se
     ./prepdocs.sh
     ```
 
+## (Optional) Github Action을 이용한 자동화
+
+### 예상 시나리오
+
+1. 운영팀은 문서 인덱싱을 위한 Blob Container를 생성해 놓음. 
+2. 개발팀은 문서파일을 Blob Container에 업로드함.
+3. Github Action을 이용하여 문서 인덱싱을 자동화함.
+
+  * `Run Workflow`를 클릭하여 실행
+
+![gh1](./image/githubaction1.png)
+
+  * 인덱스 이름과 문서가 저장된 컨테이너 입력
+
+![gh2](./image/githubaction2.png)
+
+  * 인덱싱이 완료되면 인덱스명과 인덱스 쿼리키를 확인하여 개발팀에게 제공
+
+![gh3](./image/githubaction3.png)   
+
+### Github Action 설정파일
+
+아래 yml에 지정된 변수 중 `vars.*` 와 `secrets.*`는 Github Action의 `Settings`에서 `Secrets`에 저장하여 사용합니다.
+
+참고: https://docs.github.com/en/actions/security-guides/encrypted-secrets
+
+```yml
+name: Indexing workflow
+
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:            
+      AZURE_SEARCH_INDEX:
+        description: 'Index Name'
+        default: 'gptindex-1'
+        required: true      
+        type: string    
+      AZURE_READ_STORAGE_CONTAINER_NAME:
+        description: 'Storage Container Name'
+        default: 'ragsampledoc'
+        required: true      
+        type: string
+
+jobs:
+  indexing:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+    env:
+      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+      AZURE_READ_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_READ_STORAGE_CONNECTION_STRING }}
+      AZURE_SEARCH_SERVICE_KEY: ${{ secrets.AZURE_SEARCH_SERVICE_KEY }}
+      AZURE_OPENAI_EMB_DEPLOYMENT: ${{ vars.AZURE_OPENAI_EMB_DEPLOYMENT }}
+      AZURE_OPENAI_GPT_DEPLOYMENT: ${{ vars.AZURE_OPENAI_GPT_DEPLOYMENT }}
+      AZURE_OPENAI_SERVICE: ${{ vars.AZURE_OPENAI_SERVICE }}
+      AZURE_SEARCH_SERVICE: ${{ vars.AZURE_SEARCH_SERVICE }}
+      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      AZURE_SEARCH_INDEX: ${{ inputs.AZURE_SEARCH_INDEX }}
+      AZURE_READ_STORAGE_CONTAINER_NAME: ${{ inputs.AZURE_READ_STORAGE_CONTAINER_NAME }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}           
+            
+      - name: Preparing files
+        run: |
+          python3 -m pip install -r requirements.txt
+          python3 downloader.py
+
+      - name: Indexing documents
+        run: |
+          pip install azure-search-documents==11.4.0a20230509004 --index-url=https://pkgs.dev.azure.com/azure-sdk/public/_packaging/azure-sdk-for-python/pypi/simple/
+          ./prepdocs.sh    
+
+      - name: Providing relavant information
+        run: |
+          echo "AZURE_SEARCH_INDEX: ${{ inputs.AZURE_SEARCH_INDEX }}"
+          echo "AZURE_SEARCH_QUERY_KEY: ${{ vars.AZURE_SEARCH_QUERY_KEY }}"
+          echo "Use search-vector.ipynb to query the index with GPT models"
+```
+
 ## PDF문서 인식 강화 및 문서 링크 연결을 위한 문서 업로드
 
 Azure Form Recognizer를 사용하여 이미지화된 PDF문서 인식을 강화하고 인덱싱 된 문서를 페이지별로 분리하여 Azure Storage Account에 업로드하여 문서의 출처 링크생성을 앱에서 구현할 수 있게 합니다.
@@ -119,6 +204,7 @@ Azure Form Recognizer를 사용하여 이미지화된 PDF문서 인식을 강화
 
 ## 참고
 
-https://learn.microsoft.com/ko-kr/azure/search/vector-search-overview#what-scenarios-can-vector-search-support
-
-대안 기능: https://github.com/openai/chatgpt-retrieval-plugin/blob/main/README.md#azure-cognitive-search
+* https://learn.microsoft.com/ko-kr/azure/search/vector-search-overview#what-scenarios-can-vector-search-support
+* https://github.com/microsoft/sample-app-aoai-chatGPT
+* https://github.com/Azure-Samples/azure-search-openai-demo
+* 대안 기능: https://github.com/openai/chatgpt-retrieval-plugin/blob/main/README.md#azure-cognitive-search
