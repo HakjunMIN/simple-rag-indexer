@@ -253,7 +253,7 @@ def create_sections(filename, page_map):
             "sourcefile": filename
         }
 
-# @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(20))
+@retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(20))
 def createEmbedding(input):
     return openai.Embedding.create(engine=args.openaideployment, input=input)["data"][0]["embedding"]
 
@@ -329,6 +329,35 @@ def remove_from_index(filename):
         if args.verbose: print(f"\tRemoved {len(r)} sections from index")
         # It can take a few seconds for search results to reflect changes, so wait a bit
         time.sleep(2)
+
+import requests
+
+def get_sharepoint_files(site_id, drive_id):
+    # Replace with your own values
+    access_token = "your-access-token"
+
+    # Set up the request headers
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Accept": "application/json"
+    }
+
+    # Set up the request URL
+    url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/drives/{drive_id}/root/children"
+
+    # Send the request and get the response
+    response = requests.get(url, headers=headers)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Parse the response JSON and extract the file names
+        files = [item["name"] for item in response.json()["value"] if item["file"]]
+        return files
+    else:
+        # Handle the error
+        print(f"Error getting files: {response.status_code} - {response.text}")
+        return []
+
 
 if args.removeall:
     remove_blobs(None)
