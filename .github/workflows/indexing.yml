@@ -44,8 +44,9 @@ jobs:
           python3 -m pip install -r requirements.txt
           python3 downloader.py
 
-      - name: Preparing files
+      - name: Indexing documents
         run: |
+          pip install azure-search-documents==11.4.0a20230509004 --index-url=https://pkgs.dev.azure.com/azure-sdk/public/_packaging/azure-sdk-for-python/pypi/simple/
           ./prepdocs.sh    
 
       - name: Send greeting

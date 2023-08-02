@@ -2,13 +2,13 @@ pypdf==3.12.0
 azure-ai-formrecognizer==3.2.1
 azure-storage-blob==12.14.1
 azure-identity==1.12.0
-azure-search-documents==11.4.0b6
+azure-search-documents==11.4.0a20230509004
 langchain==0.0.222
 openai==0.26.4
 python-dotenv
 requests==2.31.0
 
-# Office365-REST-Python-Client
-# msgraph-sdk
+Office365-REST-Python-Client
+msgraph-sdk
 azure-identity
 azure-storage-blob
