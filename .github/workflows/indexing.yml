@@ -40,7 +40,7 @@ jobs:
       - name: Preparing files
         run: |
           python3 -m pip install -r requirements.txt
-          python3 download.py
+          python3 downloader.py
 
       - name: Preparing files
         run: |
