@@ -1,0 +1,19 @@
+name: Index workflow
+
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:            
+      AZURE_SEARCH_INDEX:
+        description: 'Index Name'
+        default: 'sampleindex'
+        required: true      
+        type: string    
+
+
+jobs:
+  indexing:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Send greeting
+      run: echo "Hello ${{ inputs.AZURE_SEARCH_INDEX }}"
