@@ -30,6 +30,8 @@ jobs:
       AZURE_OPENAI_SERVICE: ${{ vars.AZURE_OPENAI_SERVICE }}
       AZURE_SEARCH_SERVICE: ${{ vars.AZURE_SEARCH_SERVICE }}
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      AZURE_SEARCH_INDEX: ${{ inputs.AZURE_SEARCH_INDEX }}
+      AZURE_READ_STORAGE_CONTAINER_NAME: ${{ inputs.AZURE_READ_STORAGE_CONTAINER_NAME }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
