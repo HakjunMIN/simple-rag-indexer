@@ -6,12 +6,12 @@ on:
     inputs:            
       AZURE_SEARCH_INDEX:
         description: 'Index Name'
-        default: 'sampleindex'
+        default: 'gptindex-1'
         required: true      
         type: string    
       AZURE_READ_STORAGE_CONTAINER_NAME:
         description: 'Storage Container Name'
-        default: 'samplecontainer'
+        default: 'ragsampledoc'
         required: true      
         type: string
 
