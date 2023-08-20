@@ -3,6 +3,14 @@
 Azure OpenAI RAG(Retrieval Augmented Generation) 인덱싱을 위한 쉘 스크립트입니다.
 Azure Cognitive Search를 이용하여 RAG 인덱싱을 수행하며 Semantic Search와 Vector Search를 동시에 지원하는 인덱스를 생성합니다.
 
+## 특징 ( Azure의 "Bring your own data" 대비 )
+
+1. REST API대신 SDK사용
+
+2. 문서 인덱싱의 지속 반영을 위한 인덱서 별도 구현 
+
+3. 활용도가 떨어지는 클라이언트 앱 제공 대신 테스트가 용이한 Notebook지원
+ 
 ## 사용시나리오
 
 ![secnario](./image/seqdiagram.png)
